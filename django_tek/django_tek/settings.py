@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'rest_framework.authtoken',
+    'registration',
 ]
 
 MIDDLEWARE = [
@@ -73,12 +76,19 @@ WSGI_APPLICATION = 'django_tek.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default' : {
+        'ENGINE': 'django.db.backends.mysql',
+        # 'ENGINE': 'mysql.connector.django',
+        'NAME': 'db_bishnu',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    },
 }
+
 
 
 # Password validation
@@ -99,6 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'registration.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
