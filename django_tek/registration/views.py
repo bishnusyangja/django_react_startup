@@ -8,6 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from registration.helpers import get_random_string, send_email_for_password_reset
 from registration.models import User
 from registration.serializers import UserSerializer
 
@@ -29,10 +30,10 @@ class UserSerializerView(ModelViewSet):
 			return User.objects.all()
 		
 	@action(methods=['GET'], detail=True)
-	def activate(self):
+	def activate(self, request, *args, **kwargs):
 		validity = datetime.timedelta(days=3)
 		params = self.request.query_params
-		activation_key = params.key('activation_key')
+		activation_key = params.get('activation_key', '')
 		now_time = timezone.now()
 		try:
 			obj = User.objects.filter(activation_key=activation_key)
@@ -47,3 +48,24 @@ class UserSerializerView(ModelViewSet):
 				obj.save()
 				dct = {'detail': '{} user with email {} activited successfully'.format(obj.username, obj.email)}
 		return Response(dct, status=200)
+	
+	@action(methods=['POST'], detail=True)
+	def forgot_password(self, request, *args, **kwargs):
+		data = self.request.data
+		email = data.email('email', '')
+		try:
+			obj = User.objects.filter(email=email)
+		except Exception as exc:
+			dct = {'detail': 'No user found'}
+		else:
+			random_string = get_random_string()
+			obj.pass_reset_key = random_string
+			obj.pass_reset_on = timezone.now()
+			obj.save()
+			send_email_for_password_reset(obj)
+			dct = {'detail': '{} user with email {} activited successfully'.format(obj.username, obj.email)}
+		return Response(dct, status=200)
+	
+	
+	def reset_password(self, request, *args, **kwargs):
+		pass

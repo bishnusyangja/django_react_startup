@@ -5,5 +5,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-	activation_key 	= models.CharField(max_length=50)
+	activation_key 	= models.CharField(max_length=50, blank=True)
 	key_send_on		= models.DateTimeField(default=None, null=True)
+	pass_reset_key 	= models.CharField(max_length=50, blank=True)
+	pass_reset_on  	= models.DateTimeField(default=None, null=True)

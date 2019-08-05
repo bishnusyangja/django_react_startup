@@ -3,6 +3,7 @@ import string
 
 import pytz
 from django.conf import settings
+from django.core.mail import send_mail
 from rest_framework import serializers, permissions
 
 
@@ -43,3 +44,18 @@ class LoginPermissionPermission(permissions.BasePermission):
 	
 def get_random_string(size=30, chars=string.ascii_letters+string.digits):
 	return ''.join(random.choice(chars) for x in range(size))
+
+
+def get_password_reset_link(site_name, user):
+	return '{}/reset_link'.format(site_name, user.pk)
+
+
+def send_email_for_password_reset(user):
+	site_name = 'localhost:8000'
+	reset_link = get_password_reset_link(site_name, user)
+	subject = 'Password Reset onTekkon'
+	message = '''Dear {},\nYou have requested to reset your password in tekkon account. Please follow the link below to
+reset password.\n{}'''.format(user.first_name, reset_link)
+	from_email = settings.FROM_EMAIL
+	recipient_list = [user.email]
+	send_mail(subject, message, from_email, recipient_list)
