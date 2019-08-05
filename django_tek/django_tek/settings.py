@@ -154,3 +154,13 @@ REST_FRAMEWORK = {
     
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
+
+
+# following parameters are for sending email, set your own credentials
+# FROM_EMAIL = 'your_email'
+
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'host_user_email'
+# # EMAIL_HOST_PASSWORD = 'your_password'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
