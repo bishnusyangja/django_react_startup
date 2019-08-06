@@ -6,23 +6,23 @@ __pycache__
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-django_tek/tek-app/node_modules/
-django_tek/tek-app/.pnp
-django_tek/tek-app/.pnp.js
+django_tek/static/node_modules/
+django_tek/static/.pnp
+django_tek/static/.pnp.js
 
 # testing
-django_tek/tek-app/coverage
+django_tek/static/coverage
 
 # production
-django_tek/tek-app/build
+django_tek/static/build
 
 # misc
-django_tek/tek-app/.DS_Store
-django_tek/tek-app/.env.local
-django_tek/tek-app/.env.development.local
-django_tek/tek-app/.env.test.local
-django_tek/tek-app/.env.production.local
+django_tek/static/.DS_Store
+django_tek/static/.env.local
+django_tek/static/.env.development.local
+django_tek/static/.env.test.local
+django_tek/static/.env.production.local
 
-django_tek/tek-app/npm-debug.log*
-django_tek/tek-app/yarn-debug.log*
-django_tek/tek-app/yarn-error.log*
+django_tek/static/npm-debug.log*
+django_tek/static/yarn-debug.log*
+django_tek/static/yarn-error.log*
