@@ -38,7 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
 		return value
 	
 	def get_activation_link(self, site_name, user):
-		return '{}/user/{}/activate/?activation_key={}'.format(site_name, user.pk, user.activation_key)
+		return '{}/user/activate/?activation_key={}'.format(site_name, user.pk, user.activation_key)
 		
 	def send_email(self, user):
 		site_name = 'localhost:8000'
@@ -48,9 +48,9 @@ class UserSerializer(serializers.ModelSerializer):
 		message = '''Dear {},\nYour account account has been created in Tekkon. Your Login credentials are\nusername:{}
 \npassword:{}\nemail:{}\site:{}Click the link below to activate your account.\n{}'''.format(user.first_name, user.username,
 				passwd, user.email, site_name, activation_link)
-		# from_email = settings.FROM_EMAIL
+		from_email = settings.FROM_EMAIL
 		recipient_list = [user.email]
-		# send_mail(subject, message, from_email, recipient_list)
+		send_mail(subject, message, from_email, recipient_list)
 		
 	def create(self, validated_data):
 		random_string = get_random_string()

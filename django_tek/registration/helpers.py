@@ -47,7 +47,7 @@ def get_random_string(size=30, chars=string.ascii_letters+string.digits):
 
 
 def get_password_reset_link(site_name, user):
-	return '{}/reset_link'.format(site_name, user.pk)
+	return '{}/user/reset_password/?reset_key={}'.format(site_name, user.pass_reset_key)
 
 
 def send_email_for_password_reset(user):

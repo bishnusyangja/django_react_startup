@@ -30,7 +30,7 @@ class UserSerializerView(ModelViewSet):
 		else:
 			return User.objects.all()
 		
-	@action(methods=['GET'], detail=True)
+	@action(methods=['GET'], detail=False)
 	def activate(self, request, *args, **kwargs):
 		validity = datetime.timedelta(days=3)
 		params = self.request.query_params
@@ -50,12 +50,12 @@ class UserSerializerView(ModelViewSet):
 				dct = {'detail': '{} user with email {} activited successfully'.format(obj.username, obj.email)}
 		return Response(dct, status=200)
 	
-	@action(methods=['POST'], detail=True)
+	@action(methods=['POST'], detail=False)
 	def forgot_password(self, request, *args, **kwargs):
 		data = self.request.data
-		email = data.email('email', '')
+		email = data.get('email', '')
 		try:
-			obj = User.objects.filter(email=email)
+			obj = User.objects.get(email=email)
 		except Exception as exc:
 			dct = {'detail': 'No user found'}
 		else:
@@ -64,9 +64,35 @@ class UserSerializerView(ModelViewSet):
 			obj.pass_reset_on = timezone.now()
 			obj.save()
 			send_email_for_password_reset(obj)
-			dct = {'detail': '{} user with email {} activited successfully'.format(obj.username, obj.email)}
+			dct = {'detail': 'An email is sent to {} to reset password, follow the link in email'.format(obj.email)}
 		return Response(dct, status=200)
 	
-	
+	@action(methods=['POST'], detail=False)
 	def reset_password(self, request, *args, **kwargs):
-		pass
+		validity = datetime.timedelta(days=3)
+		params = self.request.data
+		reset_key = params.get('reset_key', '')
+		old_password = params.get('old_password', '')
+		new_password = params.get('new_password', '')
+		confirm_password = params.get('new_password', '')
+		now_time = timezone.now()
+		try:
+			obj = User.objects.filter(pass_reset_key=reset_key)
+		except Exception as exc:
+			dct = {'detail': 'No user found'}
+		else:
+			valid_till = obj.key_send_on + validity
+			if now_time > valid_till:
+				dct = {'detail': 'Link is expired.'}
+			else:
+				if not new_password:
+					dct = {'detail': 'new password is required'}
+				elif not obj.check_password(old_password):
+					dct = {'detail': 'old password did not match'}
+				elif not new_password == confirm_password:
+					dct = {'detail': 'password confirmation did not match.'}
+				else:
+					obj.set_password(new_password)
+					obj.save()
+					dct = {'detail': '{} user with email {} password change done successfully'.format(obj.username, obj.email)}
+		return Response(dct, status=200)

@@ -45,6 +45,8 @@ function App() {
     let margin_style = {margin: '20px'}
     let display_style = {display: 'block'};
 
+    const [forgot_email, set_forgot_email] = useState('');
+
     const [login_name, set_login_name] = useState('');
     const [login_password, set_login_password] = useState('');
 
@@ -52,6 +54,8 @@ function App() {
     const [register_last_name, set_register_last_name] = useState('');
     const [register_email, set_register_email] = useState('');
     const [register_username, set_register_username] = useState('');
+
+    const handleChangeForgotEmail = event => set_forgot_email(event.target.value);
 
     const handleChangeLoginName = event => set_login_name(event.target.value);
     const handleChangeLoginPassword = event => set_login_password(event.target.value);
@@ -93,6 +97,24 @@ function App() {
         post_request(url, data);
     }
 
+    const submitForgotPassword = event => {
+        event.preventDefault();
+        let url = '/user/forgot_password/';
+        let data = {email: forgot_email};
+        let params = {credentials: 'same-origin', method: 'POST', headers : {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }
+        post_request(url, data);
+    }
+
+    const clickLoginWithFacebook = event => {
+        event.preventDefault();
+    }
+
 
   return (
     <div className="App">
@@ -119,8 +141,8 @@ function App() {
       </div>
 
       <div style={margin_style}>
-          <form id="forgot-password-form">
-              <input type="text" placeholder="Email" style={display_style}/>
+          <form id="forgot-password-form" onSubmit={submitForgotPassword}>
+              <input type="text" placeholder="Email" style={display_style} onChange={handleChangeForgotEmail}/>
               <button type="submit" style={display_style}>Forgot Password</button>
           </form>
       </div>
