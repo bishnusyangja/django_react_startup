@@ -48,12 +48,38 @@ function App() {
     const [login_name, set_login_name] = useState('');
     const [login_password, set_login_password] = useState('');
 
-    const handleChange = event => set_login_name(event.target.value);
+    const [register_first_name, set_register_first_name] = useState('');
+    const [register_last_name, set_register_last_name] = useState('');
+    const [register_email, set_register_email] = useState('');
+    const [register_username, set_register_username] = useState('');
 
+    const handleChangeLoginName = event => set_login_name(event.target.value);
+    const handleChangeLoginPassword = event => set_login_password(event.target.value);
 
+    const handleChangeRegisterFirstName = event => {set_register_first_name(event.target.value);
+            console.log(event.target.value); console.log('set value', register_first_name);}
+    const handleChangeRegisterLastName = event => set_register_last_name(event.target.value);
+    const handleChangeRegisterEmail = event => set_register_email(event.target.value);
+    const handleChangeRegisterUserName = event => set_register_username(event.target.value);
 
-    let url = '/user';
+    let url = '/user/';
     let data = {};
+
+    const submitRegister = event => {
+        event.preventDefault();
+        let data = {first_name: register_first_name, last_name: register_last_name,
+                        email: register_email, username: register_username};
+        console.log(data);
+        let params = {credentials: 'same-origin', method: 'POST', headers : {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }
+        post_request(url, data);
+    }
+
 
   return (
     <div className="App">
@@ -61,23 +87,37 @@ function App() {
 
       <div style={margin_style}>
           <form id="login-form">
-              <input type="text" placeholder="Username" style={display_style}/>
-              <input type="password" placeholder="Password" style={display_style}/>
+              <input type="text" placeholder="Username" style={display_style} onChange={handleChangeLoginName}/>
+              <input type="password" placeholder="Password" style={display_style} onChange={handleChangeLoginPassword}/>
 
               <input type="submit" value="Login" style={display_style}/>
           </form>
       </div>
 
       <div style={margin_style}>
-          <form id="registration-form">
-              <input type="text" placeholder="First Name" style={display_style}/>
-              <input type="text" placeholder="Last Name" style={display_style}/>
-              <input type="text" placeholder="Email" style={display_style}/>
+          <form id="registration-form" onSubmit={submitRegister}>
+              <input type="text" placeholder="First Name"  onChange={handleChangeRegisterFirstName} style={display_style}/>
+              <input type="text" placeholder="Last Name" onChange={handleChangeRegisterLastName} style={display_style}/>
+              <input type="text" placeholder="Email" onChange={handleChangeRegisterEmail} style={display_style}/>
+              <input type="text" placeholder="Username" onChange={handleChangeRegisterUserName} style={display_style}/>
 
               <input type="submit" value="Register" style={display_style}/>
           </form>
-          </div>
       </div>
+
+      <div style={margin_style}>
+          <form id="forgot-password-form">
+              <input type="text" placeholder="Email" style={display_style}/>
+              <input type="submit" value="Forgot Password" style={display_style}/>
+          </form>
+      </div>
+
+      <div style={margin_style}>
+          <form id="login-with-facebook-form">
+              <input type="submit" value="Login with Facebook" style={display_style}/>
+          </form>
+      </div>
+    </div>
   );
 }
 

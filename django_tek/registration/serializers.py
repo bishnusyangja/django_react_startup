@@ -20,6 +20,23 @@ class UserSerializer(serializers.ModelSerializer):
 		user.save()
 		return passwd
 	
+	def validate_email(self, value):
+		db_count = self.get_db_count('email', value)
+		if db_count > 0:
+			raise serializers.ValidationError('email already exists')
+		return value
+	
+	def get_db_count(self, field, value):
+		filter_params = {field: value}
+		db_count = User.objects.filter(**filter_params).count()
+		return db_count
+	
+	def validate_username(self, value):
+		db_count = self.get_db_count('username', value)
+		if db_count > 0:
+			raise serializers.ValidationError('Username already exists.')
+		return value
+	
 	def get_activation_link(self, site_name, user):
 		return '{}/user/{}/activate/?activation_key={}'.format(site_name, user.pk, user.activation_key)
 		
@@ -31,15 +48,16 @@ class UserSerializer(serializers.ModelSerializer):
 		message = '''Dear {},\nYour account account has been created in Tekkon. Your Login credentials are\nusername:{}
 \npassword:{}\nemail:{}\site:{}Click the link below to activate your account.\n{}'''.format(user.first_name, user.username,
 				passwd, user.email, site_name, activation_link)
-		from_email = settings.FROM_EMAIL
+		# from_email = settings.FROM_EMAIL
 		recipient_list = [user.email]
-		send_mail(subject, message, from_email, recipient_list)
+		# send_mail(subject, message, from_email, recipient_list)
 		
 	def create(self, validated_data):
 		random_string = get_random_string()
 		validated_data['activation_key'] = random_string
 		validated_data['key_send_on'] = timezone.now()
 		validated_data['is_active'] = False
+		validated_data['is_staff'] = False
 		instance = super().create(validated_data)
 		self.send_email(instance)
 		return instance
