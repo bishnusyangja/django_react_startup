@@ -14,7 +14,8 @@ from registration.serializers import UserSerializer
 
 
 class HomeView(TemplateView):
-	template_name = 'home.html'
+	# template_name = 'home.html'
+	template_name = 'tek-app/public/index.html'
 	
 
 class UserSerializerView(ModelViewSet):
