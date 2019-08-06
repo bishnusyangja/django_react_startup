@@ -6,23 +6,23 @@ __pycache__
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/tek-app/node_modules
-/tek-app/.pnp
-/tek-app/.pnp.js
+tek-app/node_modules/
+tek-app/.pnp
+tek-app/.pnp.js
 
 # testing
-/tek-app/coverage
+tek-app/coverage
 
 # production
-/tek-app/build
+tek-app/build
 
 # misc
-/tek-app/.DS_Store
-/tek-app/.env.local
-/tek-app/.env.development.local
-/tek-app/.env.test.local
-/tek-app/.env.production.local
+tek-app/.DS_Store
+tek-app/.env.local
+tek-app/.env.development.local
+tek-app/.env.test.local
+tek-app/.env.production.local
 
-/tek-app/npm-debug.log*
-/tek-app/yarn-debug.log*
-/tek-app/yarn-error.log*
+tek-app/npm-debug.log*
+tek-app/yarn-debug.log*
+tek-app/yarn-error.log*
